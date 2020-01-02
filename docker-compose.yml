@@ -11,20 +11,27 @@ services:
       - "8000:8000"
     volumes:
       - ./app:/app
-      - ./.envs:/envs
     command: python manage.py runserver 0.0.0.0:8000
     depends_on:
       - db
-    env_file:
-      - ./.envs/.env
-    restart: on-failure
+    restart: always
+    environment:
+      DEBUG: ${DEBUG}
+      POSTGRES_DATABASE: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_HOST: ${DB_HOST}
+      POSTGRES_PORT: ${DB_PORT}
 
   db:
     build:
       context: ./pgs
+      args:
+        psql_pass: ${DB_PASSWORD}
+        psql_db: ${DB_NAME}
       dockerfile: Dockerfile-psql
     image: my-postgres-image
     container_name: test_app_db
     ports:
       - '5555:5432'
-    restart: on-failure
+    restart: always
