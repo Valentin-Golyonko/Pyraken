@@ -1,25 +1,22 @@
 # Learning Docker + Django + Postgres + tba
 
-<code>cd pgs</code>
+### start:
 
-<code>docker build -t my-postgres-image .</code>
+open 2 terminals in current directory
 
-<code>cd ..</code>
+terminal 1:
+- <code>docker-compose build</code>
+- <code>docker-compose up</code>
 
-<code>docker build -t my-python-image .</code> 
+terminal 2:
+- <code>docker-compose run app python manage.py migrate</code>
+- <code>docker-compose run app python manage.py createsuperuser</code>
 
-<code>docker images -a</code>
+### check if it's working:
+- <code>docker images</code> # see what images you have
+- <code>docker ps</code> # see what containers is up
+- check addr - http://localhost:8000/admin/ , and login as created superuser.
 
-<code>docker-compose build</code>
-
-<code>docker-compose up</code>
-
-in a new terminal for this directory:
-
-<code>docker-compose run app python manage.py migrate</code>
-
-<code>docker-compose run app python manage.py createsuperuser</code>
-
-<code>docker ps</code> # see what containers is up
-
-check addr - http://localhost:8000/admin/ , and login as created superuser.
+### the end:
+terminal 2:
+- <code>docker-compose stop</code>

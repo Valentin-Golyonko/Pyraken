@@ -1,9 +1,11 @@
-version: "3"
+version: "3.7"
 
 services:
   app:
     build:
       context: .
+      dockerfile: Dockerfile-app
+    image: my-python-image
     container_name: test_app
     ports:
       - "8000:8000"
@@ -15,8 +17,14 @@ services:
       - db
     env_file:
       - ./.envs/.env
+    restart: on-failure
+
   db:
+    build:
+      context: ./pgs
+      dockerfile: Dockerfile-psql
     image: my-postgres-image
     container_name: test_app_db
     ports:
       - '5555:5432'
+    restart: on-failure
