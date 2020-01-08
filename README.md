@@ -15,3 +15,8 @@
 
 ### the end:
 - <code>docker-compose stop</code>
+
+### test celery + python + redis + rabbitmq (no django):
+- open jupyter notebook
+- open console in 'celery' dir and start celery worker - lines 2 in JN's
+- run JN's line by line
