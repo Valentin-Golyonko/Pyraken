@@ -11,7 +11,9 @@ services:
       - "8000:8000"
     volumes:
       - ./app:/app
-    command: python manage.py runserver 0.0.0.0:8000
+    command: bash -c
+      "python manage.py migrate
+      && python manage.py runserver 0.0.0.0:8000"
     depends_on:
       - db
       - redis
@@ -24,6 +26,16 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_HOST: ${DB_HOST}
       POSTGRES_PORT: ${DB_PORT}
+
+  celery:
+    image: my-python-image
+    container_name: test_app_celery
+    command: celery -A app worker -P prefork -c 4 -l info
+    volumes:
+    - ./app:/app
+    depends_on:
+      - redis
+      - rabitmq
 
   db:
     build:

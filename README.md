@@ -4,7 +4,6 @@
 - open terminals in current directory
 - <code>docker-compose build</code>
 - <code>docker-compose up -d</code>
-- <code>docker-compose run app python manage.py migrate</code>
 - <code>docker-compose run app python manage.py createsuperuser</code>
 
 ### check if it's working:
