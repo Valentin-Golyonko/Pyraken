@@ -2,14 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Demo page</title>
 
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
 
@@ -22,9 +19,49 @@
 <div class="main-div" id="demo_page_content">
     <h3>Hello from demo page</h3>
 
-    <button id="btn_run_celery" type="button">Run celery</button>
+    <div>
+        <label>Only INTEGER numbers pls:</label><br>
+        <input value="4" id="input_1_check">
+        &nbsp;*&nbsp;
+        <input value="-7" id="input_2_check">
+        <button id="btn_check_celery" type="button">Check celery</button>
+        &nbsp;Result =&nbsp;
+        <input id="res_check" disabled>,
+        done in
+        <input id="done_in_sec_check" disabled>
+        &nbsp;sec
+    </div>
+    <br>
+    <div>
+        <button id="btn_1cpu_celery" type="button">1 CPU celery</button>
+    </div>
+    <br>
+    <div>
+        <button id="btn_4cpu_celery" type="button">4 CPU celery</button>
+    </div>
 
-    <p id="celery_output_log"></p>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btn_check_celery').on('click', btn_check);
+
+            function btn_check() {
+                var val_1_check = $('#input_1_check').val();
+                var val_2_check = $('#input_2_check').val();
+                $.ajax({
+                    'url': "{% url 'check-celery-ajax' %}",
+                    'data': {
+                        'input_data_1': val_1_check,
+                        'input_data_2': val_2_check
+                    },
+                    success: function (response_data) {
+                        var json_data = jQuery.parseJSON(response_data);
+                        $('#res_check').val(json_data['result']);
+                        $('#done_in_sec_check').val(json_data['time']);
+                    }
+                });
+            }
+        });
+    </script>
 </div>
 
 </body>

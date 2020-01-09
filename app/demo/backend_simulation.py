@@ -1,10 +1,20 @@
-from demo.tasks import add, mul, args_sum, hello, my_sort
+import json
+from time import perf_counter
+
+from demo.tasks import mul, my_sort
 
 
-def check_celery_tasks():
-    print(add.name)
-    a1 = add.delay(3, -2)
-    print(a1.get())
+def check_celery_tasks(values):
+    time_0 = perf_counter()
+
+    task_mul = mul.delay(values[0], values[1])
+    output = int(task_mul.get())
+
+    end_time = "%.6f" % (perf_counter() - time_0)
+
+    json_data = json.dumps({'result': output, 'time': end_time}, ensure_ascii=False)
+
+    return json_data
 
 
 def tasks_for_one_cpu():
@@ -25,4 +35,3 @@ def task_for_four_cpus():
                 done_tasks.remove(dt)
 
     print('all tasks done')
-
