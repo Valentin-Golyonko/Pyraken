@@ -6,3 +6,24 @@ body {
 .main-div {
     margin: 8px;
 }
+
+.my-footer {
+    position: fixed;
+    left: 5%;
+    bottom: 5%;
+    text-align: center;
+}
+
+.items-center {
+    text-align: center;
+}
+
+.items-padding {
+    padding: 10px;
+}
+
+.color-line {
+    background: green;
+    width: 10px;
+    height: auto;
+}

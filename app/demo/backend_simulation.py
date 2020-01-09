@@ -18,11 +18,22 @@ def check_celery_tasks(values):
 
 
 def tasks_for_one_cpu():
+    time_0 = perf_counter()
+
+    print('task sent')
     for i in range(50):
         my_sort(5)
 
+    end_time = "%.6f" % (perf_counter() - time_0)
+
+    json_data = json.dumps({'time': end_time}, ensure_ascii=False)
+
+    return json_data
+
 
 def task_for_four_cpus():
+    time_0 = perf_counter()
+
     done_tasks = []
     for i in range(50):
         done_tasks.append(my_sort.delay(5))
@@ -35,3 +46,9 @@ def task_for_four_cpus():
                 done_tasks.remove(dt)
 
     print('all tasks done')
+
+    end_time = "%.6f" % (perf_counter() - time_0)
+
+    json_data = json.dumps({'time': end_time}, ensure_ascii=False)
+
+    return json_data

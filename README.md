@@ -1,4 +1,4 @@
-# Learning Docker + Django + Postgres + tba
+# Base project skeleton with: Docker + Django + Postgres + Celery + RabbitMQ + Redis + tba
 
 ### start:
 - open terminals in current directory
@@ -9,13 +9,10 @@
 ### check if it's working:
 - <code>docker images</code> # see what images you have
 - <code>docker ps</code> # see what containers is up
-- check addr - http://localhost:8000/admin/ , and login as created superuser.
+- check localhost - http://localhost:8000/
+- rum something
+- check admin - http://localhost:8000/admin/
 - <code>docker-compose restart</code> # if localhost does't work
 
 ### the end:
 - <code>docker-compose stop</code>
-
-### test celery + python + redis + rabbitmq (no django):
-- open jupyter notebook
-- open console in 'celery' dir and start celery worker - lines 2 in JN's
-- run JN's line by line

@@ -1,4 +1,4 @@
-from demo.backend_simulation import check_celery_tasks
+from demo.backend_simulation import check_celery_tasks, tasks_for_one_cpu, task_for_four_cpus
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
@@ -22,6 +22,30 @@ class CheckCeleryAjax(TemplateView):
             response = check_celery_tasks(ajax_data)
         except Exception as ex:
             print('Exception in CheckCeleryAjax\n%s' % ex)
+        else:
+            return HttpResponse(response)
+
+        return HttpResponse(None)
+
+
+class OneCpuCeleryAjax(TemplateView):
+    def get(self, request, *args, **kwargs):
+        try:
+            response = tasks_for_one_cpu()
+        except Exception as ex:
+            print('Exception in OneCpuCeleryAjax\n%s' % ex)
+        else:
+            return HttpResponse(response)
+
+        return HttpResponse(None)
+
+
+class FourCpuCeleryAjax(TemplateView):
+    def get(self, request, *args, **kwargs):
+        try:
+            response = task_for_four_cpus()
+        except Exception as ex:
+            print('Exception in FourCpuCeleryAjax\n%s' % ex)
         else:
             return HttpResponse(response)
 
