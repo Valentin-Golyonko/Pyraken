@@ -14,5 +14,11 @@
 - check admin - http://localhost:8000/admin/
 - <code>docker-compose restart</code> # if localhost does't work
 
+<details><summary>Docker in PyCharm (CLICK ME)</summary>
+<p>
+  <img src="https://github.com/Valentin-Golyonko/ForDockerTest/blob/master/docker%20in%20pycharm.png" alt="web_view">
+  </p>
+</details>
+
 ### the end:
 - <code>docker-compose stop</code>
