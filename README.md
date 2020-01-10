@@ -1,4 +1,4 @@
-# Base project skeleton with: Docker + Django + Postgres + Celery + RabbitMQ + Redis + tba
+# All in one web project skeleton: Docker + Django + PostgreSQL + Celery + RabbitMQ + Redis + Django REST.
 
 ### start:
 - open terminals in current directory
