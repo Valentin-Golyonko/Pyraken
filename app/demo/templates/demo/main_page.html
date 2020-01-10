@@ -1,0 +1,124 @@
+{% extends 'demo/demo_template.html' %}
+{% load static %}
+
+{% block title %}Demo page{% endblock title %}
+
+{% block content %}
+
+    <div class="main-div" id="demo_page_content">
+        <h2 class="items-center">Hello from demo page</h2>
+
+        <div class="items-padding">
+            <span class="color-line">&nbsp;&nbsp;</span>
+            <label>Only INTEGER numbers pls:</label><br>
+            <input value="4" id="input_1_check">
+            &nbsp;*&nbsp;
+            <input value="-7" id="input_2_check">
+            <button id="btn_check_celery" type="button">Check Celery</button>
+            &nbsp;Result =&nbsp;
+            <input id="res_check" disabled>,
+            done in&nbsp;
+            <input id="done_in_sec_check" disabled>
+            &nbsp;sec
+        </div>
+
+        <div class="items-padding">
+            <p>
+                <span class="color-line">&nbsp;&nbsp;</span>
+                Press btn to run test task on 1 CPU and NO Celery
+                <button id="btn_1cpu_celery" type="button">1 CPU celery</button>
+            </p>
+        </div>
+
+        <div class="items-padding">
+            <p>
+                <span class="color-line">&nbsp;&nbsp;</span>
+                Press btn to run test task on 4 CPUs with Celery + RabbitMQ
+                <button id="btn_4cpu_celery" type="button">4 CPU celery</button>
+            </p>
+        </div>
+
+        <div class="items-padding">
+            <p>
+                <span class="color-line">&nbsp;&nbsp;</span>
+                *** By default:
+            </p>
+            <ul>
+                <li>CELERY BROKER = rabitmq</li>
+                <li>CELERY RESULT BACKEND = redis</li>
+            </ul>
+        </div>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var url_check_celery = "{% url 'check-celery-ajax' %}";
+                var url_1cpu_celery = "{% url '1cpu-celery-ajax' %}";
+                var url_4cpu_celery = "{% url '4cpu-celery-ajax' %}";
+
+                $('#btn_check_celery').on('click', fun_check);
+                $('#btn_1cpu_celery').on('click', fun_1cpu);
+                $('#btn_4cpu_celery').on('click', fun_4cpu);
+
+                function fun_check() {
+                    var val_1_check = $('#input_1_check').val();
+                    var val_2_check = $('#input_2_check').val();
+                    $.ajax({
+                        'method': "GET",
+                        'url': url_check_celery,
+                        'data': {
+                            'input_data_1': val_1_check,
+                            'input_data_2': val_2_check
+                        },
+                        success: function (response_data) {
+                            $('#res_check').val(response_data['result']);
+                            $('#done_in_sec_check').val(response_data['time']);
+                            if (response_data['error'] != null) {
+                                alert(response_data['error'])
+                            }
+                        },
+                        error: function (error_data) {
+                            console.log('Ajax error! ', error_data);
+                        }
+                    });
+                }
+
+                function fun_1cpu() {
+                    $.ajax({
+                        'method': "GET",
+                        'url': url_1cpu_celery,
+                        success: function (response_data) {
+                            if (response_data) {
+                                var json_data = jQuery.parseJSON(response_data);
+                                alert('Finished in ' + json_data['time'] + ' seconds.');
+                            } else {
+                                alert('Exception!');
+                            }
+                        },
+                        error: function (error_data) {
+                            console.log('Ajax error! ', error_data);
+                        }
+                    })
+                }
+
+                function fun_4cpu() {
+                    $.ajax({
+                        'method': "GET",
+                        'url': url_4cpu_celery,
+                        success: function (response_data) {
+                            if (response_data) {
+                                var json_data = jQuery.parseJSON(response_data);
+                                alert('Finished in ' + json_data['time'] + ' seconds.');
+                            } else {
+                                alert('Exception!');
+                            }
+                        },
+                        error: function (error_data) {
+                            console.log('Ajax error! ', error_data);
+                        }
+                    })
+                }
+            });
+        </script>
+    </div>
+
+{% endblock content %}

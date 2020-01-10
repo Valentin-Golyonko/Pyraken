@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{% block title %}Title{% endblock title %} - web app</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'demo/css/my_style.css' %}">
+
+</head>
+<body>
+
+{% block content %}{% endblock content %}
+
+<div class="my-footer items-center">
+    Project powered <i class="fas fa-bomb"></i> by:
+    <p>
+        <img src="{% static 'demo/img/python.png' %}" alt="python" height="150">
+        <img src="{% static 'demo/img/django.png' %}" alt="django" height="100">
+        <img src="{% static 'demo/img/docker.png' %}" alt="docker" height="100">
+        <img src="{% static 'demo/img/celery.png' %}" alt="celery" height="100">
+        <img src="{% static 'demo/img/psql.png' %}" alt="psql" height="100">
+        <img src="{% static 'demo/img/rabbitmq.png' %}" alt="rabbitmq" height="100">
+        <img src="{% static 'demo/img/redis.png' %}" alt="redis" height="100">
+        <img src="{% static 'demo/img/django_rest.png' %}" alt="django_rest" height="100">
+    </p>
+</div>
+
+</body>
+</html>

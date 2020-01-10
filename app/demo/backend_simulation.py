@@ -8,16 +8,14 @@ def check_celery_tasks(values):
     time_0 = perf_counter()
 
     task_mul = mul.delay(values[0], values[1])
-    output = int(task_mul.get())
+    output = task_mul.get()
 
     end_time = "%.6f" % (perf_counter() - time_0)
 
-    json_data = json.dumps({'result': output, 'time': end_time}, ensure_ascii=False)
-
-    return json_data
+    return {'result': output, 'time': end_time}
 
 
-def tasks_for_one_cpu():
+def task_for_one_cpu():
     time_0 = perf_counter()
 
     print('task sent')
