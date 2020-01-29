@@ -29,7 +29,3 @@ def my_sort(x):
     shuffle(arr)
     sorted(arr)
     return 'done'
-
-
-if __name__ == '__main__':
-    app.worker_main()

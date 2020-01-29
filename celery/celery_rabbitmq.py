@@ -7,6 +7,14 @@ app = Celery('tasks',
              backend='amqp://guest:guest@localhost:5672',
              )
 
+app.conf.update(
+    task_serializer='json',
+    accept_content=['json'],  # Ignore other content
+    result_serializer='json',
+    timezone='Europe/Oslo',
+    enable_utc=True,
+)
+
 
 @app.task
 def test_task():
@@ -29,7 +37,3 @@ def my_sort(x):
     shuffle(arr)
     sorted(arr)
     return 'done'
-
-
-if __name__ == '__main__':
-    app.worker_main()
