@@ -22,3 +22,16 @@
 
 ### the end:
 - <code>docker-compose stop</code>
+
+
+### work with Postrges:
+- <code>docker exec -it  test_app_db psql -U postgres</code>
+- if you have previous DB -> dump it data: 
+<code>python manage.py dumpdata --exclude=contenttypes --exclude=auth.Permission > initial_data.json</code>
+- load dumped data to Postgres container with Django help:
+<code>docker-compose run app python manage.py loaddata initial_data.json</code>
+
+
+### static files:
+- collect all Django static so you can share it with Nginx:
+<code>docker-compose run app python manage.py collectstatic</code>

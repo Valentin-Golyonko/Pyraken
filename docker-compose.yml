@@ -36,6 +36,7 @@ services:
     depends_on:
       - redis
       - rabitmq
+    restart: on-failure
 
   db:
     build:
