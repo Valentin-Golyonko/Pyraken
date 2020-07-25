@@ -26,17 +26,23 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_HOST: ${DB_HOST}
       POSTGRES_PORT: ${DB_PORT}
+      C_BROKER: ${CELERY_BROKER}
+      C_BACKEND: ${CELERY_BACKEND}
 
   celery:
     image: my-python-image
     container_name: test_app_celery
     command: celery -A app worker -P prefork -c 4 -l info
     volumes:
-    - ./app:/app
+      - ./app:/app
     depends_on:
       - redis
       - rabitmq
     restart: on-failure
+    environment:
+      - DEBUG=${DEBUG}
+      - C_BROKER=${CELERY_BROKER}
+      - C_BACKEND=${CELERY_BACKEND}
 
   db:
     build:
