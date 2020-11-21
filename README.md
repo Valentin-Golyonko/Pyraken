@@ -29,7 +29,7 @@
 
 
 ### work with Postrges:
-- <code>docker exec -it  test_app_db psql -U postgres</code>
+- <code>docker exec -it pyraken-db psql -U postgres</code>
 - if you have previous DB -> dump it data: 
 <code>python manage.py dumpdata -e contenttypes -e auth.Permission -e admin -e sessions > initial_data.json</code>
 - load dumped data to postgres through the django container:
