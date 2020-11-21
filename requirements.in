@@ -1,0 +1,9 @@
+Django
+djangorestframework
+djangorestframework-simplejwt
+drf-extensions
+psycopg2
+psycopg2-binary
+pip-tools
+celery
+ipython

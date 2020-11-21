@@ -1,18 +1,14 @@
-# All in one web project skeleton: Docker + Django + PostgreSQL + Celery + RabbitMQ + Redis + Django REST.
+# All in one web project skeleton: Docker + Django + PostgreSQL + Celery + RabbitMQ + Django REST.
 
 ### start:
 - open terminals in current directory
 - <code>docker-compose build</code>
 - <code>docker-compose up -d</code>
-- <code>docker-compose run app python manage.py createsuperuser</code>
 
 ### check if it's working:
 - <code>docker images</code> # see what images you have
 - <code>docker ps</code> # see what containers is up
-- check localhost - http://localhost:8000/
-- rum something
-- check admin - http://localhost:8000/admin/
-- <code>docker-compose restart</code> # if localhost does't work
+- check out japanese flag builder - http://127.0.0.1:8000/api/core/draw_flag/
 
 <details><summary>Docker in PyCharm (CLICK ME)</summary>
 <p>
@@ -20,18 +16,22 @@
   </p>
 </details>
 
-### the end:
+### some commands:
 - <code>docker-compose stop</code>
+- <code>docker-compose restart</code>
+- <code>docker-compose down</code>
 
 
 ### work with Postrges:
 - <code>docker exec -it  test_app_db psql -U postgres</code>
 - if you have previous DB -> dump it data: 
-<code>python manage.py dumpdata --exclude=contenttypes --exclude=auth.Permission > initial_data.json</code>
-- load dumped data to Postgres container with Django help:
-<code>docker-compose run app python manage.py loaddata initial_data.json</code>
+<code>python manage.py dumpdata -e contenttypes -e auth.Permission -e admin -e sessions > initial_data.json</code>
+- load dumped data to postgres through the django container:
+- <code>docker exec -it pyraken-django bash</code>
+- root@...:/pyraken# <code>python manage.py loaddata initial_data.json</code>
 
 
 ### static files:
 - collect all Django static so you can share it with Nginx:
-<code>docker-compose run app python manage.py collectstatic</code>
+- <code>docker exec -it pyraken-django bash</code>
+- root@...:/pyraken# <code>python manage.py collectstatic</code>

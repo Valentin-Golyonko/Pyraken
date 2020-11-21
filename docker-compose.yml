@@ -4,19 +4,19 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile-app
-    image: my-python-image
-    container_name: test_app
+      dockerfile: Dockerfile
+    image: python:3.8-slim-buster
+    container_name: pyraken-django
     ports:
       - "8000:8000"
     volumes:
-      - ./app:/app
+      - .:/pyraken
     command: bash -c
       "python manage.py migrate
+      && python manage.py loaddata initial_data.json
       && python manage.py runserver 0.0.0.0:8000"
     depends_on:
       - db
-      - redis
       - rabitmq
     restart: on-failure # always
     environment:
@@ -30,44 +30,43 @@ services:
       C_BACKEND: ${CELERY_BACKEND}
 
   celery:
-    image: my-python-image
-    container_name: test_app_celery
-    command: celery -A app worker -P prefork -c 4 -l info
+    image: python:3.8-slim-buster
+    container_name: pyraken-celery
+    command: celery -A config worker -P prefork -c 2 -l info
     volumes:
-      - ./app:/app
+      - .:/pyraken
     depends_on:
-      - redis
       - rabitmq
     restart: on-failure
     environment:
-      - DEBUG=${DEBUG}
-      - C_BROKER=${CELERY_BROKER}
-      - C_BACKEND=${CELERY_BACKEND}
+      DEBUG: ${DEBUG}
+      POSTGRES_DATABASE: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_HOST: ${DB_HOST}
+      POSTGRES_PORT: ${DB_PORT}
+      C_BROKER: ${CELERY_BROKER}
+      C_BACKEND: ${CELERY_BACKEND}
 
   db:
     build:
-      context: ./pgs
+      context: config/local_postgres_for_docker
       args:
         psql_pass: ${DB_PASSWORD}
         psql_db: ${DB_NAME}
-      dockerfile: Dockerfile-psql
-    image: my-postgres-image
-    container_name: test_app_db
+      dockerfile: Dockerfile
+    image: postgres:latest
+    container_name: pyraken-db
     ports:
       - '5555:5432'
     restart: on-failure
 
-  redis:
-    image: redis
-    container_name: some-redis
-    ports:
-    - '6379:6379'
-    restart: on-failure
-
   rabitmq:
     image: rabbitmq:3-management
-    container_name: some-rabbitmq
+    container_name: pyraken-rabbitmq
     ports:
-    - '15672:15672'
-    - '5672:5672'
+      - "4369:4369"
+      - "5671:5671"
+      - "5672:5672"
+      - "15672:15672"
     restart: on-failure
