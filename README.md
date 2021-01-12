@@ -12,13 +12,13 @@
 
 <details><summary>Docker in PyCharm (CLICK ME)</summary>
 <p>
-    <img src="https://github.com/Valentin-Golyonko/ForDockerTest/blob/master/docker%20in%20pycharm.png" alt="docker_in_pycharm.png">
+    <img src="https://github.com/Valentin-Golyonko/Pyraken/blob/master/docker%20in%20pycharm.png" alt="docker_in_pycharm.png">
 </p>
 </details>
 
 <details><summary>result (CLICK ME)</summary>
 <p>
-    <img src="https://github.com/Valentin-Golyonko/ForDockerTest/blob/master/result.png" alt="result.png">
+    <img src="https://github.com/Valentin-Golyonko/Pyraken/blob/master/media/result.png" alt="result.png">
 </p>
 </details>
 
