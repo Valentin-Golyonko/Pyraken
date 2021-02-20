@@ -11,33 +11,10 @@ services:
       - "8000:8000"
     volumes:
       - .:/pyraken
-    command: bash -c
-      "python manage.py migrate
-      && python manage.py loaddata initial_data.json
-      && python manage.py runserver 0.0.0.0:8000"
     depends_on:
       - db
-      - rabitmq
+      - rabbitmq
     restart: on-failure # always
-    environment:
-      DEBUG: ${DEBUG}
-      POSTGRES_DATABASE: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_HOST: ${DB_HOST}
-      POSTGRES_PORT: ${DB_PORT}
-      C_BROKER: ${CELERY_BROKER}
-      C_BACKEND: ${CELERY_BACKEND}
-
-  celery:
-    image: python:3.8-slim-buster
-    container_name: pyraken-celery
-    command: celery -A config worker -P prefork -c 2 -l info
-    volumes:
-      - .:/pyraken
-    depends_on:
-      - rabitmq
-    restart: on-failure
     environment:
       DEBUG: ${DEBUG}
       POSTGRES_DATABASE: ${DB_NAME}
@@ -61,7 +38,7 @@ services:
       - '5555:5432'
     restart: on-failure
 
-  rabitmq:
+  rabbitmq:
     image: rabbitmq:3-management
     container_name: pyraken-rabbitmq
     ports:

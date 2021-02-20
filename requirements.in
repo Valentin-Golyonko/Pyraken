@@ -1,9 +1,11 @@
 Django
 djangorestframework
 djangorestframework-simplejwt
+django-extensions
 drf-extensions
 psycopg2
 psycopg2-binary
-pip-tools
 celery
+django-celery-beat
 ipython
+pip-tools

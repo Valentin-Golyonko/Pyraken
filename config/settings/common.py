@@ -23,6 +23,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'django_celery_beat',
+    'django_extensions',
 
     'app.core',
 ]
@@ -117,6 +119,7 @@ CELERY_RESULT_BACKEND = os.environ.get('C_BACKEND', default=None)
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
 CELERY_IMPORTS = (
     'app.core.tasks',
@@ -132,7 +135,7 @@ REST_FRAMEWORK = {
     # ),
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.SessionAuthentication",
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        # "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
 
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
@@ -161,7 +164,7 @@ LOGGING = {
         'file_django': {
             'level': DJANGO_LOG_LEVEL,
             'class': 'logging.FileHandler',
-            'filename': BASE_DIR / LOGS_DIR / 'django_warning.log',
+            'filename': BASE_DIR / LOGS_DIR / 'django.log',
             'formatter': 'verbose',
         },
         'file': {
@@ -187,6 +190,11 @@ LOGGING = {
             'level': APP_LOG_LVL,
             'propagate': True,
         },
+        'config.queues_scripts': {
+            'handlers': ['file', 'console'],
+            'level': APP_LOG_LVL,
+            'propagate': True,
+        },
     },
 }
 
@@ -196,3 +204,7 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_USE_TLS = 1
 EMAIL_USE_SSL = 0
 EMAIL_PORT = 587
+
+# SIMPLE_JWT = {
+#     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+# }

@@ -120,6 +120,7 @@ dmypy.json
 # Static
 static/
 
-*local.py
+config/settings/local.py
 # my own using
 .idea/
+*.pid

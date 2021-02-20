@@ -5,6 +5,14 @@
 - <code>docker-compose build</code>
 - <code>docker-compose up -d</code>
 
+### work with Postrges:
+- <code>docker exec -it  pyraken-db psql -U postgres</code>
+- if you have previous DB -> dump it data: 
+<code>python manage.py dumpdata -e contenttypes -e auth.Permission -e admin -e sessions > initial_data.json</code>
+- load dumped data to postgres through the django container:
+- <code>docker exec -it pyraken-django bash</code>
+- root@...:/pyraken# <code>python manage.py loaddata initial_data.json</code>
+
 ### check if it's working:
 - <code>docker images</code> # see what images you have
 - <code>docker ps</code> # see what containers is up
@@ -26,16 +34,6 @@
 - <code>docker-compose stop</code>
 - <code>docker-compose restart</code>
 - <code>docker-compose down</code>
-
-
-### work with Postrges:
-- <code>docker exec -it  test_app_db psql -U postgres</code>
-- if you have previous DB -> dump it data: 
-<code>python manage.py dumpdata -e contenttypes -e auth.Permission -e admin -e sessions > initial_data.json</code>
-- load dumped data to postgres through the django container:
-- <code>docker exec -it pyraken-django bash</code>
-- root@...:/pyraken# <code>python manage.py loaddata initial_data.json</code>
-
 
 ### static files:
 - collect all Django static so you can share it with Nginx:
