@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_celery_beat',
     'django_extensions',
+    'channels',
 
     'app.core',
 ]
@@ -208,3 +209,14 @@ EMAIL_PORT = 587
 # SIMPLE_JWT = {
 #     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
 # }
+
+# Web Sockets
+ASGI_APPLICATION = "config.asgi.application"
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('redis', 6379)],
+        },
+    },
+}

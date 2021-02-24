@@ -3,6 +3,8 @@ djangorestframework
 djangorestframework-simplejwt
 django-extensions
 drf-extensions
+channels
+channels_redis
 psycopg2
 psycopg2-binary
 celery

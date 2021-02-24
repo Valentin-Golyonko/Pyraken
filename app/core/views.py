@@ -1,3 +1,5 @@
+from time import sleep
+
 from rest_framework import status
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
@@ -6,6 +8,7 @@ from rest_framework.views import APIView
 from app.core.draw_flag_scripts.flag import Flag3
 from app.core.serializers import DrawFlagSerializer
 from app.core.tasks import shared_task_draw_flag
+from app.core.web_sockets.send_massage import SendMassageWS
 
 
 class DrawFlagAPIView(APIView):
@@ -18,6 +21,12 @@ class DrawFlagAPIView(APIView):
 
     @classmethod
     def post(cls, request, *args, **kwargs):
+        SendMassageWS.send_ws_msg(
+            chat_name='lobby',
+            title='hello',
+            msg='world'
+        )
+        sleep(.5)
         serializer = DrawFlagSerializer(data=request.data)
 
         if not serializer.is_valid():

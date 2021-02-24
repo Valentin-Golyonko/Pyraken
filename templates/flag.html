@@ -47,5 +47,45 @@
         integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
         crossorigin="anonymous"></script>
 
+<script>
+    {# side nav bar -> #}
+    const cur_url = window.location.pathname.toString();
+    $('.nav-link').each(function () {
+        const link_name = $(this).text().toLowerCase().replace(" ", "_");
+        if (cur_url.indexOf(link_name) >= 0) {
+            $(this).addClass('active');
+        }
+    });
+    {# <- side nav bar #}
+
+    const token = '{{ csrf_token }}';
+    $(document).ready(function () {
+        {# WebSocket -> #}
+        const chatSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/chat/'
+            + 'lobby'   // chat name
+            + '/'
+        );
+
+        chatSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            {#console.log('e:', e);#}
+            console.log('data:', data);
+        };
+
+        chatSocket.onopen = function (e) {
+            console.info('Chat socket open; chat name - lobby',);
+        };
+
+        chatSocket.onclose = function (e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+        {# <- WebSocket #}
+
+    });
+</script>
+
 </body>
 </html>
