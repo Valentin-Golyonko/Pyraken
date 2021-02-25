@@ -18,6 +18,8 @@ services:
     restart: on-failure # always
     environment:
       DEBUG: ${DEBUG}
+      SECRET_KEY: ${SECRET_KEY}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
       POSTGRES_DATABASE: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
