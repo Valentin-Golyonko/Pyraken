@@ -6,7 +6,7 @@ mkdir static
 sleep 5
 
 echo 'migrate:'
-docker exec -it pyraken-django bash
+python manage.py migrate
 
 #echo 'collectstatic:'
 # python manage.py collectstatic --no-input
