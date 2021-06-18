@@ -6,6 +6,7 @@ mkdir static
 sleep 5
 
 echo 'migrate:'
+python manage.py makemigrations
 python manage.py migrate
 
 #echo 'collectstatic:'
