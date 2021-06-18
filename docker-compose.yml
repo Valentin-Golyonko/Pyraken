@@ -17,16 +17,17 @@ services:
       - redis
     restart: always
     environment:
-      DEBUG: ${DEBUG}
-      SECRET_KEY: ${SECRET_KEY}
-      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
-      POSTGRES_DATABASE: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_HOST: ${DB_HOST}
-      POSTGRES_PORT: ${DB_PORT}
-      C_BROKER: ${CELERY_BROKER}
-      C_BACKEND: ${CELERY_BACKEND}
+      - DEBUG_=${DEBUG}
+      - SECRET_KEY_=${SECRET_KEY}
+      - ALLOWED_HOSTS_=${ALLOWED_HOSTS}
+      - POSTGRES_DATABASE=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD_=${DB_PASSWORD}
+      - POSTGRES_HOST=${DB_HOST}
+      - POSTGRES_PORT=${DB_PORT}
+      - C_BROKER=${CELERY_BROKER}
+      - C_BACKEND=${CELERY_BACKEND}
+    command: ./start_django.sh
 
   db:
     build:
@@ -35,10 +36,10 @@ services:
         psql_pass: ${DB_PASSWORD}
         psql_db: ${DB_NAME}
       dockerfile: Dockerfile
-    image: postgres:latest
+    image: postgres:12
     container_name: pyraken-db
     ports:
-      - '5555:5432'
+      - '5432:5432'
     restart: always
 
   rabbitmq:

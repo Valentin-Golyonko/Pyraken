@@ -2,9 +2,13 @@
 mkdir logs
 mkdir media
 mkdir static
-sleep 5 # wait DB, rabbitmq
+sleep 5
 echo 'activate venv:'
 . ./venv/bin/activate
+
+python -V
+pip -V
+source ./venv/bin/activate
 
 echo 'migrate:'
 python manage.py migrate
