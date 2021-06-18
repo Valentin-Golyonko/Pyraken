@@ -8,12 +8,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /pyraken
-RUN python -m pip install --upgrade setuptools pip wheel uwsgi pip-tools
-
 COPY . .
 
-COPY requirements.txt .
+RUN python -m pip install --upgrade setuptools pip wheel uwsgi pip-tools
 RUN pip-sync
 
-COPY start_django.sh .
 RUN chmod +x ./start_django.sh

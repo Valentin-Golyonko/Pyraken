@@ -1,4 +1,4 @@
-FROM postgres:latest
+FROM postgres:12
 
 ARG psql_pass
 ARG psql_db

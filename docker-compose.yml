@@ -5,7 +5,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: python:3.8-slim-buster
     container_name: pyraken-django
     ports:
       - "8000:8000"
@@ -36,7 +35,6 @@ services:
         psql_pass: ${DB_PASSWORD}
         psql_db: ${DB_NAME}
       dockerfile: Dockerfile
-    image: postgres:12
     container_name: pyraken-db
     ports:
       - '5432:5432'

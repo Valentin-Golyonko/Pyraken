@@ -2,22 +2,17 @@
 mkdir logs
 mkdir media
 mkdir static
-sleep 5
-echo 'activate venv:'
-. ./venv/bin/activate
 
-python -V
-pip -V
-source ./venv/bin/activate
+sleep 5
 
 echo 'migrate:'
-python manage.py migrate
+docker exec -it pyraken-django bash
 
 #echo 'collectstatic:'
 # python manage.py collectstatic --no-input
 
 echo 'loaddata:'
-python manage.py loaddata initial_data.json
+python manage.py loaddata initial_data.json.xz
 
 echo 'runscript:'
 # restart/start celery main worker
