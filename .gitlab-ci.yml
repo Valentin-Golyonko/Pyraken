@@ -8,7 +8,7 @@ stages:
   - deploy
 
 variables:
-  IMAGE: registry.gitlab.com/v.halionka/pyraken .
+  IMAGE: registry.gitlab.com/v.halionka/pyraken
 
 build:
   stage: build
