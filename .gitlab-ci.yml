@@ -9,29 +9,30 @@ stages:
 
 variables:
   IMAGE: registry.gitlab.com/v.halionka/pyraken
+  IMAGE_LABEL: pyraken
 
 build:
   stage: build
   before_script:
-    - uname -a
     - docker info
-    - docker login registry.gitlab.com -u $CI_REGISTRY_USERNAME -p $CI_REGISTRY_PASSWORD
   only:
-    - master
+    - develop
   script:
-    - docker build -t $IMAGE:latest .
-    - docker push $IMAGE:latest
+    - chmod og= $ID_RSA
+    - apk update && apk add openssh-client
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "cd .. && git -C $PROJECT_DIR pull https://$CI_USERNAME:$CI_PASSWORD@$GIT_REPO develop"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "cd .. && cd $PROJECT_DIR && docker build --label $IMAGE_LABEL -t $IMAGE ."
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "cd .. && cd $PROJECT_DIR && docker login registry.gitlab.com -u $CI_USERNAME -p $CI_PASSWORD"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "cd .. && cd $PROJECT_DIR && docker push $IMAGE"
 
 deploy:
   stage: deploy
   before_script:
-    - uname -a
     - docker info
-    - docker login registry.gitlab.com -u $CI_REGISTRY_USERNAME -p $CI_REGISTRY_PASSWORD
-    - apk update
-    - apk upgrade
-    - apk add --no-cache docker-compose
   only:
-    - master
+    - develop
   script:
-    - docker-compose pull && docker-compose up -d
+    - chmod og= $ID_RSA
+    - apk update && apk add openssh-client
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "cd .. && cd $PROJECT_DIR && docker-compose up -d"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "cd .. && docker image prune -a -f --filter 'label=$IMAGE_LABEL' && docker volume prune -f"
