@@ -165,7 +165,7 @@ six==1.16.0
     #   pyopenssl
     #   python-dateutil
     #   service-identity
-sqlparse==0.4.1
+sqlparse==0.4.2
     # via django
 toml==0.10.2
     # via pep517
