@@ -67,7 +67,7 @@ daphne==3.0.2
     # via channels
 decorator==5.1.1
     # via ipython
-django==3.2.12
+django==3.2.13
     # via
     #   -r requirements.in
     #   channels
