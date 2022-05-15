@@ -2,24 +2,26 @@
 mkdir logs
 mkdir media
 mkdir static
+. ./venv/bin/activate
+echo "--- 1. Preparations done. ---"
+sleep 1
 
-sleep 5
-
-echo 'migrate:'
-python manage.py makemigrations
 python manage.py migrate
+echo "--- 2. Migrate done. ---"
+sleep 1
 
-#echo 'collectstatic:'
-# python manage.py collectstatic --no-input
+python manage.py collectstatic --no-input
+echo "--- 3. Collect static files done. ---"
+sleep 1
 
-echo 'loaddata:'
-python manage.py loaddata initial_data.json.xz
+python manage.py loaddata initial_data.json.xz  # ONLY FOR TEST
+echo "--- 4. Load initial data done. ---"
+sleep 1
 
-echo 'runscript:'
-# restart/start celery main worker
 python manage.py runscript config.queues_scripts.restart_queues
+echo "--- 5. Restart  celery worker done. ---"
+sleep 1
 
-echo 'runserver:'
+#gunicorn -w 4 -b 0.0.0.0:8000 --log-level warning -k uvicorn.workers.UvicornWorker config.asgi:application
 python manage.py runserver 0.0.0.0:8000
-
-echo 'nothing here'
+echo "--- 6. Run django server. ---"

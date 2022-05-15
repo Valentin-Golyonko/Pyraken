@@ -20,7 +20,10 @@ logger = logging.getLogger(__name__)
 class SendMassageWS:
 
     @classmethod
-    def send_ws_msg(cls, chat_name: str, title: str, msg: str) -> None:
+    def send_ws_msg(cls,
+                    chat_name: str,
+                    title: str,
+                    msg: str) -> None:
         try:
             channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(

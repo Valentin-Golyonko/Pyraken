@@ -1,5 +1,6 @@
 import logging
 import math
+from typing import Optional
 
 from app.core.models import Flag
 
@@ -23,7 +24,7 @@ class Flag3:
         self.circle_center_y = 1 + (self._number // 2) + self.outer_circle_radius - 0.5
         self.flag_width = 3 * self._number + 2
         self.flag_height = 2 * self._number + 2
-        self.outer_radius_correction_coefficient = 0.18
+        self.outer_radius_correction_coefficient = 0.19
 
     def circle_formula(self, x: int, y: int) -> str:
         """ x**2 + y**2 = r**2 """
@@ -61,14 +62,15 @@ class Flag3:
         return self.create_flag()
 
     @staticmethod
-    def get_flag_object(flag_obj_id: int = None) -> Flag:
+    def get_flag_object(flag_obj_id: int = None) -> Optional[Flag]:
         try:
             if flag_obj_id:
                 return Flag.objects.get(id=flag_obj_id)
             return Flag.objects.get(is_default_object=True)
         except Flag.DoesNotExist:
-            logger.error(f"get_flag_object(): Flag.DoesNotExist")
-            return Flag.objects.none()
-        except Flag.DoesNotExist:
-            logger.error(f"get_flag_object(): Flag.DoesNotExist")
-            return Flag.objects.none()
+            logger.error(f"get_flag_object(): Flag.DoesNotExist;"
+                         f" {flag_obj_id = }")
+        except Flag.MultipleObjectsReturned:
+            logger.error(f"get_flag_object(): Flag.MultipleObjectsReturned;"
+                         f" {flag_obj_id = }")
+        return None

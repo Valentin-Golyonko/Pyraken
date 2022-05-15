@@ -9,11 +9,6 @@
 ### work with Postrges:
 
 - <code>docker exec -it pyraken-db psql -U postgres</code>
-- if you have previous DB -> dump it data:
-  <code>python manage.py dumpdata -e contenttypes -e auth.Permission -e admin -e sessions -o initial_data.json.xz</code>
-- load dumped data to postgres through the django container:
-- <code>docker exec -it pyraken-django bash</code>
-- root@...:/pyraken# <code>python manage.py loaddata initial_data.json</code>
 
 ### check if it's working:
 
@@ -39,15 +34,13 @@
 - <code>docker-compose restart</code>
 - <code>docker-compose down</code>
 
-### static files:
-
-- collect all Django static so you can share it with Nginx:
-- <code>docker exec -it pyraken-django bash</code>
-- root@...:/pyraken# <code>python manage.py collectstatic</code>
-
 ### Dependencies update
 
 - <code>pip install --upgrade setuptools pip wheel pip-tools</code>
 - empty requirements.txt file (delete everything inside it)
 - <code>pip-compile</code>
 - <code>pip-sync</code>
+
+### if you need to run it as local dev
+- go to config/settings and rename local_dev.py to local.py
+- watch for __init__.py in settings dir - IDE can rename import!

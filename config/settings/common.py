@@ -4,11 +4,11 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent.parent  # /<some_path>/Pyraken
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
+# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 SECRET_KEY = os.environ.get('SECRET_KEY_')
 
-DEBUG = os.environ.get('DEBUG_') == 'True'
+DEBUG = False
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS_', '').split(',')
 
@@ -61,21 +61,21 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
+# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_DATABASE'),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD_'),
-        'HOST': os.environ.get('POSTGRES_HOST'),
-        'PORT': os.environ.get('POSTGRES_PORT'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('POSTGRES_DATABASE', ''),
+        'USER': os.environ.get('POSTGRES_USER', ''),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', ''),
+        'HOST': 'db',  # os.environ.get('POSTGRES_HOST', ''),
+        'PORT': os.environ.get('POSTGRES_PORT', ''),
     }
 }
 
 # Password validation
-# https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
+# https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -93,7 +93,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Internationalization
-# https://docs.djangoproject.com/en/3.0/topics/i18n/
+# https://docs.djangoproject.com/en/3.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
@@ -106,7 +106,7 @@ USE_L10N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.0/howto/static-files/
+# https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'static'
@@ -114,9 +114,14 @@ STATIC_ROOT = BASE_DIR / 'static'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Celery settings
-CELERY_BROKER_URL = os.environ.get('C_BROKER', default=None)
-CELERY_RESULT_BACKEND = os.environ.get('C_BACKEND', default=None)
+RABBIT_MQ_NAME = os.environ.get('RABBIT_MQ_NAME_')
+RABBIT_MQ_PASS = os.environ.get('RABBIT_MQ_PASS_')
+RABBIT_MQ_IP = os.environ.get('RABBIT_MQ_IP_')
+RABBIT_MQ_PORT = os.environ.get('RABBIT_MQ_PORT_')
+
+# Celery settings ->
+CELERY_BROKER_URL = f"amqp://{RABBIT_MQ_NAME}:{RABBIT_MQ_PASS}@rabbitmq:{RABBIT_MQ_PORT}"
+CELERY_RESULT_BACKEND = 'rpc://'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
@@ -125,35 +130,47 @@ CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CELERY_IMPORTS = (
     'app.core.tasks',
 )
+CELERY_BEAT_SCHEDULE = {
+    # xx:00 min
+    # 'task-some-name': {
+    #     'task': 'app.core.task_some_name',
+    #     'schedule': crontab(hour='*', minute=0),
+    # },
+}
+# <- Celery settings
 
-# Django rest
+# Django REST
 REST_FRAMEWORK = {
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ),
-    # "DEFAULT_PARSER_CLASSES": (
-    #     "rest_framework.parsers.JSONParser",
-    # ),
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.SessionAuthentication",
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
         # "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ),
+    ],
 
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
 }
 
-# Django logging
+# SIMPLE_JWT = {
+#     'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+#     'REFRESH_TOKEN_LIFETIME': timedelta(hours=3),
+#     'UPDATE_LAST_LOGIN': True,
+# }
+
+
+# Django logging ->
 DJANGO_LOG_LEVEL = 'WARNING'
-APP_LOG_LVL = 'DEBUG'
+APP_LOG_LVL = 'WARNING'
 LOGS_DIR = 'logs/'
+FILE_DJANGO = BASE_DIR / LOGS_DIR / 'django.log'
+FILE_APPS_LOGS = BASE_DIR / LOGS_DIR / 'apps_logging.log'
 
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': '{levelname} | {asctime} | {module} | {message}.',
+            'format': '{levelname} | {asctime} | {module} | {message}',
             'style': '{',
         },
         'simple': {
@@ -164,14 +181,20 @@ LOGGING = {
     'handlers': {
         'file_django': {
             'level': DJANGO_LOG_LEVEL,
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / LOGS_DIR / 'django.log',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'when': 'midnight',
+            'interval': 1,
+            'backupCount': 30,
+            'filename': FILE_DJANGO,
             'formatter': 'verbose',
         },
         'file': {
             'level': APP_LOG_LVL,
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / LOGS_DIR / 'debug.log',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'when': 'midnight',
+            'interval': 1,
+            'backupCount': 30,
+            'filename': FILE_APPS_LOGS,
             'formatter': 'verbose',
         },
         'console': {
@@ -182,36 +205,36 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['file_django', 'console'],
+            'handlers': ('file_django', 'console'),
             'level': DJANGO_LOG_LEVEL,
             'propagate': True,
         },
+        # apps logging
         'app.core': {
-            'handlers': ['file', 'console'],
+            'handlers': ('file', 'console'),
             'level': APP_LOG_LVL,
             'propagate': True,
         },
+        # other
         'config.queues_scripts': {
-            'handlers': ['file', 'console'],
+            'handlers': ('file', 'console'),
             'level': APP_LOG_LVL,
             'propagate': True,
         },
     },
 }
+# <- Django logging
 
 # Send email Google
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
-EMAIL_USE_TLS = 1
-EMAIL_USE_SSL = 0
-EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_PORT = 587  # 587 for TLS, 465 for SSL
 
-# SIMPLE_JWT = {
-#     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-# }
-
-# Web Sockets
+# Web Sockets ->
 ASGI_APPLICATION = "config.asgi.application"
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -220,5 +243,6 @@ CHANNEL_LAYERS = {
         },
     },
 }
+# <- Web Sockets
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

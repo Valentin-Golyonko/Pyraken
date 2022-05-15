@@ -8,12 +8,15 @@ aioredis==1.3.1
     # via channels-redis
 amqp==5.1.1
     # via kombu
+anyio==3.6.1
+    # via watchgod
 asgiref==3.5.1
     # via
     #   channels
     #   channels-redis
     #   daphne
     #   django
+    #   uvicorn
 asttokens==2.0.5
     # via stack-data
 async-timeout==4.0.2
@@ -50,6 +53,7 @@ click==8.1.3
     #   click-plugins
     #   click-repl
     #   pip-tools
+    #   uvicorn
 click-didyoumean==0.3.0
     # via celery
 click-plugins==1.1.1
@@ -72,11 +76,14 @@ django==3.2.13
     #   -r requirements.in
     #   channels
     #   django-celery-beat
+    #   django-cors-headers
     #   django-extensions
     #   django-timezone-field
     #   djangorestframework
     #   djangorestframework-simplejwt
 django-celery-beat==2.2.1
+    # via -r requirements.in
+django-cors-headers==3.12.0
     # via -r requirements.in
 django-extensions==3.1.5
     # via -r requirements.in
@@ -93,14 +100,21 @@ drf-extensions==0.7.1
     # via -r requirements.in
 executing==0.8.3
     # via stack-data
+gunicorn==20.1.0
+    # via -r requirements.in
+h11==0.13.0
+    # via uvicorn
 hiredis==2.0.0
     # via aioredis
+httptools==0.4.0
+    # via uvicorn
 hyperlink==21.0.0
     # via
     #   autobahn
     #   twisted
 idna==3.3
     # via
+    #   anyio
     #   hyperlink
     #   twisted
 incremental==21.3.0
@@ -123,7 +137,7 @@ pexpect==4.8.0
     # via ipython
 pickleshare==0.7.5
     # via ipython
-pip-tools==6.6.0
+pip-tools==6.6.1
     # via -r requirements.in
 prompt-toolkit==3.0.29
     # via
@@ -147,7 +161,7 @@ pycparser==2.21
     # via cffi
 pygments==2.12.0
     # via ipython
-pyjwt==2.3.0
+pyjwt==2.4.0
     # via djangorestframework-simplejwt
 pyopenssl==22.0.0
     # via twisted
@@ -155,12 +169,18 @@ python-crontab==2.6.0
     # via django-celery-beat
 python-dateutil==2.8.2
     # via python-crontab
+python-dotenv==0.20.0
+    # via
+    #   -r requirements.in
+    #   uvicorn
 pytz==2022.1
     # via
     #   celery
     #   django
     #   django-timezone-field
     #   djangorestframework
+pyyaml==6.0
+    # via uvicorn
 service-identity==21.1.0
     # via twisted
 six==1.16.0
@@ -170,6 +190,8 @@ six==1.16.0
     #   click-repl
     #   python-dateutil
     #   service-identity
+sniffio==1.2.0
+    # via anyio
 sqlparse==0.4.2
     # via django
 stack-data==0.2.0
@@ -186,13 +208,21 @@ txaio==22.2.1
     # via autobahn
 typing-extensions==4.2.0
     # via twisted
+uvicorn[standard]==0.17.6
+    # via -r requirements.in
+uvloop==0.16.0
+    # via uvicorn
 vine==5.0.0
     # via
     #   amqp
     #   celery
     #   kombu
+watchgod==0.8.2
+    # via uvicorn
 wcwidth==0.2.5
     # via prompt-toolkit
+websockets==10.3
+    # via uvicorn
 wheel==0.37.1
     # via pip-tools
 zope-interface==5.4.0

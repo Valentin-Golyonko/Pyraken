@@ -1,4 +1,4 @@
-FROM python:3.8-slim-buster
+FROM python:3.10-slim-buster
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /pyraken
 COPY . .
 
-RUN python -m pip install --upgrade setuptools pip wheel uwsgi pip-tools
-RUN pip-sync
+RUN python -m pip install --upgrade pip setuptools wheel pip-tools
+RUN pip-sync && pip install -r requirements.txt
 
 RUN chmod +x ./start_django.sh

@@ -2,15 +2,13 @@ from rest_framework import serializers
 
 
 class DrawFlagSerializer(serializers.Serializer):
-    even_number = serializers.IntegerField(
+    number = serializers.IntegerField(
         required=True,
         min_value=1,
-        label='Enter even number to draw japanese flag',
-        style={'class': "form-control"},
     )
 
-    def validate(self, attrs):
-        if attrs.get('even_number') % 2:
-            raise serializers.ValidationError("The number should be even!")
+    def validate(self, attrs: dict) -> dict:
+        if attrs.get('number') % 2:
+            raise serializers.ValidationError({'number': "The number should be even!"})
 
         return attrs

@@ -1,16 +1,28 @@
+psycopg2
+psycopg2-binary
+
 Django<4
 djangorestframework
 djangorestframework-simplejwt
+django-cors-headers
 django-extensions
 drf-extensions
+
 channels
 channels_redis
-psycopg2
-psycopg2-binary
+
 celery
 django-celery-beat
+
 ipython
 pip-tools
+python-dotenv
+
+gunicorn
+uvicorn[standard]
 
 # pip install -U pip setuptools wheel pip-tools
+# pip install -U django-debug-toolbar
+# pip install -U coverage
+# pip install -U locust
 # pip install -r requirements.txt

@@ -16,25 +16,25 @@ services:
       - redis
     restart: always
     environment:
-      - DEBUG_=${DEBUG}
       - SECRET_KEY_=${SECRET_KEY}
       - ALLOWED_HOSTS_=${ALLOWED_HOSTS}
       - POSTGRES_DATABASE=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD_=${DB_PASSWORD}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_HOST=${DB_HOST}
       - POSTGRES_PORT=${DB_PORT}
-      - C_BROKER=${CELERY_BROKER}
-      - C_BACKEND=${CELERY_BACKEND}
+      - RABBIT_MQ_NAME_=${RABBIT_MQ_NAME}
+      - RABBIT_MQ_PASS_=${RABBIT_MQ_PASS}
+      - RABBIT_MQ_IP_=${RABBIT_MQ_IP}
+      - RABBIT_MQ_PORT_=${RABBIT_MQ_PORT}
     command: ./start_django.sh
 
   db:
-    build:
-      context: config/local_postgres_for_docker
-      args:
-        psql_pass: ${DB_PASSWORD}
-        psql_db: ${DB_NAME}
-      dockerfile: Dockerfile
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
     container_name: pyraken-db
     ports:
       - '5432:5432'

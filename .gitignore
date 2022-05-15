@@ -123,4 +123,4 @@ static/
 config/settings/local.py
 # my own using
 .idea/
-*.pid
+logs/*.pid
