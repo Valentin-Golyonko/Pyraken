@@ -14,7 +14,7 @@ python manage.py collectstatic --no-input
 echo "--- 3. Collect static files done. ---"
 sleep 1
 
-python manage.py loaddata initial_data.json.xz  # ONLY FOR TEST
+python manage.py loaddata db_backup/initial_data.json.xz  # !!! ONLY FOR TEST !!!
 echo "--- 4. Load initial data done. ---"
 sleep 1
 

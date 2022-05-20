@@ -13,6 +13,7 @@ from time import sleep
 from django.utils.timezone import now
 
 from app.core.constants.core_constants import CoreConstant
+from config.settings import DEBUG
 
 logger = logging.getLogger(__name__)
 
@@ -42,11 +43,16 @@ def restart_main_queue() -> None:
                 logger.error(f"restart_main_queue(): rm main_pid_file Ex;"
                              f" {ex = }")
 
+    if DEBUG:
+        log_lvl = 'info'
+    else:
+        log_lvl = 'warning'
+
     date_str = now().strftime(CoreConstant.Y_M_D_FORMAT)
     try:
         os.system(f"celery multi start worker"
                   f" -A config"
-                  f" -l warning"
+                  f" -l {log_lvl}"
                   f" -c4"
                   f" -B"
                   f" -Q {CoreConstant.DEFAULT_QUEUE}"

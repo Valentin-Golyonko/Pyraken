@@ -1,19 +1,24 @@
-# All in one web project skeleton: Docker + Django + PostgreSQL + Celery + RabbitMQ + Django REST.
+# All in one web project skeleton
+- Docker
+- Django / Django REST
+- PostgreSQL
+- Celery
+- RabbitMQ
+- WebSockets (Django Channels)
+- Redis
 
-### start:
-
+### Start:
 - open terminals in current directory
-- <code>docker-compose build</code>
-- <code>docker-compose up -d</code>
+- `docker-compose build`
+- `docker-compose up -d`
 
-### work with Postrges:
+### Work with Postrges:
+- `docker exec -it pyraken-db psql -U postgres`
+- data backup `python manage.py dumpdata core.Flag _OTHER_APPS_or_APPS_MODELS_ -o db_backup/initial_data.json.xz`
 
-- <code>docker exec -it pyraken-db psql -U postgres</code>
-
-### check if it's working:
-
-- <code>docker images</code> # see what images you have
-- <code>docker ps</code> # see what containers is up
+### Check if it's working:
+- `docker images` # see what images you have
+- `docker ps` # see if containers is up and running
 - check out japanese flag builder - http://127.0.0.1:8000/api/core/draw_flag/
 
 <details><summary>Docker in PyCharm (CLICK ME)</summary>
@@ -28,19 +33,26 @@
 </p>
 </details>
 
-### some commands:
-
-- <code>docker-compose stop</code>
-- <code>docker-compose restart</code>
-- <code>docker-compose down</code>
+### Some commands:
+- `docker-compose stop`
+- `docker-compose restart`
+- `docker-compose down`
 
 ### Dependencies update
-
-- <code>pip install --upgrade setuptools pip wheel pip-tools</code>
+- `pip install --upgrade setuptools pip wheel pip-tools`
 - empty requirements.txt file (delete everything inside it)
-- <code>pip-compile</code>
-- <code>pip-sync</code>
+- `pip-compile`
+- `pip-sync`
 
-### if you need to run it as local dev
+### If you need to run it as local dev
 - go to config/settings and rename local_dev.py to local.py
 - watch for __init__.py in settings dir - IDE can rename import!
+
+### Django backups and sharing for apps logs, db backups, media
+In `docker-compose.yml` to the `app` container add:
+-     volumes:
+      - /root/_server_path_/db_backup:/pyraken/db_backup
+      - /root/_server_path_/logs_backup:/pyraken/logs
+      - /root/_server_path_/media_backup:/pyraken/media
+
+### ...
