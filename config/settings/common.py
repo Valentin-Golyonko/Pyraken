@@ -232,6 +232,8 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_PORT = 587  # 587 for TLS, 465 for SSL
 
+REDIS_PASS = os.environ.get('REDIS_PASS_', '')
+
 # Web Sockets ->
 ASGI_APPLICATION = "config.asgi.application"
 
@@ -239,7 +241,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('redis', 6379)],
+            "hosts": [f"redis://:{REDIS_PASS}@redis:6379/0"],
         },
     },
 }

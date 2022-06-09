@@ -27,6 +27,7 @@ services:
       - RABBIT_MQ_PASS_=${RABBIT_MQ_PASS}
       - RABBIT_MQ_IP_=${RABBIT_MQ_IP}
       - RABBIT_MQ_PORT_=${RABBIT_MQ_PORT}
+      - REDIS_PASS_=${REDIS_PASS}
     command: ./start_django.sh
 
   db:
@@ -49,6 +50,9 @@ services:
       - "5672:5672"
       - "15672:15672"
     restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBIT_MQ_NAME}
+      - RABBITMQ_DEFAULT_PASS=${RABBIT_MQ_PASS}
 
   redis:
     image: redis:latest
@@ -56,3 +60,5 @@ services:
     ports:
       - "6379:6379"
     restart: always
+    command: >
+      --requirepass ${REDIS_PASS}
