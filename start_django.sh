@@ -2,6 +2,7 @@
 mkdir logs
 mkdir media
 mkdir static
+touch ./logs/gunicorn.log
 . ./venv/bin/activate
 echo "--- 1. Preparations done. ---"
 sleep 1
@@ -22,6 +23,5 @@ python manage.py runscript config.queues_scripts.restart_queues
 echo "--- 5. Restart  celery worker done. ---"
 sleep 1
 
-#gunicorn -w 4 -b 0.0.0.0:8000 --log-level warning -k uvicorn.workers.UvicornWorker config.asgi:application
-python manage.py runserver 0.0.0.0:8000
+gunicorn -c ./config/gunicorn/gunicorn_config.py
 echo "--- 6. Run django server. ---"
