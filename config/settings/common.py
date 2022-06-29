@@ -1,16 +1,25 @@
 import os
 from pathlib import Path
 
+from dotenv import dotenv_values, load_dotenv
+
+from app.core.constants.core_constants import CoreConstant
+
+load_dotenv()
+
+environ_values = {
+    **dotenv_values(".env"),  # load sensitive variables
+    **dotenv_values(".env_local"),  # load sensitive variables
+    **os.environ,  # override loaded values with environment variables
+}
+
 BASE_DIR = Path(__file__).resolve().parent.parent.parent  # /<some_path>/Pyraken
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
-
-SECRET_KEY = os.environ.get('SECRET_KEY_')
+SECRET_KEY = environ_values.get('SECRET_KEY')
 
 DEBUG = False
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS_', '').split(',')
+ALLOWED_HOSTS = environ_values.get('ALLOWED_HOSTS').split(',')
 
 # Application definition
 
@@ -60,17 +69,35 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+REDIS_USER = environ_values.get('REDIS_USER', '')
+REDIS_PASS = environ_values.get('REDIS_PASS', '')
+
+RABBIT_MQ_NAME = environ_values.get('RABBIT_MQ_NAME')
+RABBIT_MQ_PASS = environ_values.get('RABBIT_MQ_PASS')
+RABBIT_MQ_IP = environ_values.get('RABBIT_MQ_IP')
+RABBIT_MQ_PORT = environ_values.get('RABBIT_MQ_PORT')
+
+RUN_WITH_DOCKER = environ_values.get('RUN_WITH_DOCKER', 'false') == 'true'
+if RUN_WITH_DOCKER:
+    DB_HOST = "db"
+    REDIS_HOST = f"redis://:{REDIS_PASS}@redis:6379"
+    RABBIT_MQ_HOST = f"amqp://{RABBIT_MQ_NAME}:{RABBIT_MQ_PASS}@rabbitmq:{RABBIT_MQ_PORT}"
+else:
+    DB_HOST = environ_values.get('DB_HOST')
+    REDIS_HOST = f"redis://:{REDIS_PASS}@127.0.0.1:6379"
+    RABBIT_MQ_HOST = f"amqp://{RABBIT_MQ_NAME}:{RABBIT_MQ_PASS}@{RABBIT_MQ_IP}:{RABBIT_MQ_PORT}"
+
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('POSTGRES_DATABASE', ''),
-        'USER': os.environ.get('POSTGRES_USER', ''),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', ''),
-        'HOST': 'db',  # os.environ.get('POSTGRES_HOST', ''),
-        'PORT': os.environ.get('POSTGRES_PORT', ''),
+        'NAME': environ_values.get('DB_NAME'),
+        'USER': environ_values.get('DB_USER'),
+        'PASSWORD': environ_values.get('DB_PASSWORD'),
+        'HOST': DB_HOST,
+        'PORT': environ_values.get('DB_PORT'),
     }
 }
 
@@ -114,18 +141,18 @@ STATIC_ROOT = BASE_DIR / 'static'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-RABBIT_MQ_NAME = os.environ.get('RABBIT_MQ_NAME_')
-RABBIT_MQ_PASS = os.environ.get('RABBIT_MQ_PASS_')
-RABBIT_MQ_IP = os.environ.get('RABBIT_MQ_IP_')
-RABBIT_MQ_PORT = os.environ.get('RABBIT_MQ_PORT_')
-
 # Celery settings ->
-CELERY_BROKER_URL = f"amqp://{RABBIT_MQ_NAME}:{RABBIT_MQ_PASS}@rabbitmq:{RABBIT_MQ_PORT}"
+CELERY_BROKER_URL = RABBIT_MQ_HOST
 CELERY_RESULT_BACKEND = 'rpc://'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+CELERY_TIMEZONE = TIME_ZONE
+
+CELERY_DEFAULT_QUEUE = CoreConstant.DEFAULT_QUEUE
+CELERY_DEFAULT_EXCHANGE = CoreConstant.DEFAULT_QUEUE
+CELERY_DEFAULT_ROUTING_KEY = CoreConstant.DEFAULT_QUEUE
 
 CELERY_IMPORTS = (
     'app.core.tasks',
@@ -160,7 +187,7 @@ REST_FRAMEWORK = {
 
 # Django logging ->
 DJANGO_LOG_LEVEL = 'WARNING'
-APP_LOG_LVL = 'WARNING'
+APP_LOG_LVL = environ_values.get('APP_LOG_LVL', 'WARNING')
 LOGS_DIR = 'logs/'
 FILE_DJANGO = BASE_DIR / LOGS_DIR / 'django.log'
 FILE_APPS_LOGS = BASE_DIR / LOGS_DIR / 'apps_logging.log'
@@ -232,8 +259,6 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_PORT = 587  # 587 for TLS, 465 for SSL
 
-REDIS_PASS = os.environ.get('REDIS_PASS_', '')
-
 # Web Sockets ->
 ASGI_APPLICATION = "config.asgi.application"
 
@@ -241,7 +266,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [f"redis://:{REDIS_PASS}@redis:6379/0"],
+            "hosts": [REDIS_HOST],
         },
     },
 }

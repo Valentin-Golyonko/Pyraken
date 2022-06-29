@@ -1,10 +1,4 @@
-/media
-/db_backup/local_*.xz
-/db_backup/local_*.json
-/db_backup/prod_*.xz
-/db_backup/prod_*.json
 /config/settings/local.py
-/logs
 /static
 /venv
 /.idea

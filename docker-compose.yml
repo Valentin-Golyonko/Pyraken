@@ -15,19 +15,6 @@ services:
       - rabbitmq
       - redis
     restart: always
-    environment:
-      - SECRET_KEY_=${SECRET_KEY}
-      - ALLOWED_HOSTS_=${ALLOWED_HOSTS}
-      - POSTGRES_DATABASE=${DB_NAME}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_HOST=${DB_HOST}
-      - POSTGRES_PORT=${DB_PORT}
-      - RABBIT_MQ_NAME_=${RABBIT_MQ_NAME}
-      - RABBIT_MQ_PASS_=${RABBIT_MQ_PASS}
-      - RABBIT_MQ_IP_=${RABBIT_MQ_IP}
-      - RABBIT_MQ_PORT_=${RABBIT_MQ_PORT}
-      - REDIS_PASS_=${REDIS_PASS}
     command: ./start_django.sh
 
   db:
